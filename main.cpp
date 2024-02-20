@@ -54,10 +54,31 @@ int main()
 
 
 //P controller
-    while(t < t_max || getError(player_position) == 0){
-      print_status(t, player_position);
+    while(t < t_max){
+      //print_status(t, player_position);
       actuate(&t, ts, &player_position, K_p*getError(player_position));
     }
+
+    //Comparing for different K_p's:
+
+    for(K_p = 0.1; K_p < 1; K_p+=0.1)
+    {
+
+    t = 0;
+    player_position = 0;
+
+         while(t < t_max){
+      //print_status(t, player_position);
+      actuate(&t, ts, &player_position, K_p*getError(player_position));
+    }
+
+    cout << "K_p: " << K_p << endl;
+    print_status(t, player_position);
+
+    printf("\nK_p: %f \t Error: %f\n", K_p, getError(player_position));
+
+    }
+
 
     cout << ts;
 
@@ -71,7 +92,7 @@ void print_status(float t, float player_position)
 
 
 
-void actuate(float *t, float ts, float* player_position, float velocity)
+void actuate(float *t, float ts, float* player_position, float velocity)  //Receives the actuating signal, the velocity and actuates (moves the player) according to it.
 {
     *player_position = *player_position + velocity*ts;
     *t = *t + ts;
